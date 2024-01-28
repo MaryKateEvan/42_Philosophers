@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/01/25 03:16:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/01/28 00:52:24 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,16 @@
 # include <pthread.h>
 # include <sys/time.h> //for the gettimeofday
 
-# define RED "\033[0;31m"
-# define CLEAR "\033[0m"
+// # define RED "\033[0;31m"
+// # define CLEAR "\033[0m"
 
-typedef struct s_philos t_philos;
+# define RED "\x1B[31m"
+# define CLEAR "\x1B[0m"
+
+// Define macros for colored output
+# define ERROR "\x1B[31mError: \x1B[0m"
+
+typedef struct s_philo t_philo;
 
 typedef struct s_data
 {
@@ -47,6 +53,7 @@ typedef struct s_philo
 	bool			is_eating; //i have not used it yet
 	pthread_mutex_t	r_fork;
 	pthread_mutex_t	*l_fork;
+	t_data			*data_ptr;
 
 	//time: time_to_die;
 	pthread_mutex_t	philo_lock; //not pointer 
@@ -55,7 +62,7 @@ typedef struct s_philo
 
 unsigned int	ft_atoui(const char *str);
 unsigned int	current_mtime(void);
-
+void			ft_clear_and_exit(t_philo *philo, unsigned int num, bool join_first);
 #endif //PHILO_H
 
 // ./philo num_philos time_to_die time_eating time_sleeping times_to_eat[optional];
