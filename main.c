@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/01/25 17:59:37 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/01/28 01:12:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,51 +55,60 @@ bool ft_init_sdata(int argc, char **argv, t_data *data)
 		data->max_meals = ft_atoui(argv[4]);
 	data->any_dead = false;
 	// Should I also save the multiplication max_meals * num_of_philos ?
-	data->philo = (t_philo *)malloc(data->num_philos * sizeof(t_philo));
-	if (data->philo == NULL)
-		return(false);
+
 	return (true);
 }
 
 
-bool ft_init_sphilo(t_philo *philo, unsigned int num_philos)
+
+bool	ft_init_sphilo(t_data *data)
 {
 	unsigned int	id;
 
 	id = 0;
-	while (++id <= num_philos) //i starts as 1
+	data->philo = (t_philo *)malloc(data->num_philos * sizeof(t_philo));
+	if (data->philo == NULL)
+		return(false);
+	while (++id <= data->num_philos) //i starts as 1
 	{
-		philo[id - 1].id = id;
+		data->philo[id - 1].id = id;
 		// data->philo[id - 1].thread = 0; //do I actually need that?
-		philo[id - 1].started_eat = current_mtime();
-		philo[id - 1].times_ate = 0;
-		philo[id - 1].is_eating = false;
-		if (pthread_mutex_init(&philo[id - 1].r_fork, NULL) != 0) //returns 0 in success
-			return (false);
+		data->philo[id - 1].started_eat = current_mtime();
+		data->philo[id - 1].times_ate = 0;
+		data->philo[id - 1].is_eating = false;
+		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL)) //returns 0 in success
+			return (ft_clear_and_exit(data->philo, --id, false), false);
 		if (id > 1)
-			philo[id - 1].l_fork = &philo[id - 2].r_fork;
+			data->philo[id - 1].l_fork = &data->philo[id - 2].r_fork;
 	}
-	philo[0].l_fork = &philo[num_philos - 1].r_fork;
+	data->philo[0].l_fork = &data->philo[data->num_philos - 1].r_fork;
 	// Any mutexes I want to initialize here?
 	return (true);
 }
 
-void	*routine(void *data)
-{
+// void	*philos_routine(void *arg)
+// {
 	
-}
+// }
 
-void ft_error_exit(char *message, t_data *data, int i)
+
+void	ft_clear_and_exit(t_philo *philo, unsigned int num, bool join_first)
 {
 	int	i;
 
-	printf(RED "Error: " CLEAR "%s\n", message);
 	i = 0;
-	while (i < data->num_philos)
+	if (join_first == true)
 	{
-		
+		while (i < num)
+		{
+			if (philo[i].thread != 0)
+				pthread_join(philo[i].thread, NULL);
+			i++;
+		}
 	}
-	free(data->philo);
+	while (philo != NULL && --num >= 0)
+		pthread_mutex_destroy(&philo[num].r_fork);
+	free(philo);
 }
 
 int	main(int argc, char **argv)
@@ -108,18 +117,19 @@ int	main(int argc, char **argv)
 	unsigned int	i;
 	// t_philo	*philos_ptr;
 	
-	if (ft_input_is_valid(argc, ++argv) == false)
-		return(printf(RED "Error: " CLEAR "%s\n", "invalid input"), 0); //or i could change it directly to printf
-	if (ft_init_sdata(argc, argv, &data) == false)
-		return(printf(RED "Error: " CLEAR "%s\n", "malloc failed"), 1); //i don't need to free the data->philo cause if the malloc failed the pointer is null
-	if (ft_init_sphilo(data.philo, data.num_philos) == false)
-		return(printf(RED "Error: " CLEAR "%s\n", "mlx_init failed"), 1);
+	if (!ft_input_is_valid(argc, ++argv))
+		return(printf(ERROR "invalid input\n"), 0); //or i could change it directly to printf
+	if (!ft_init_sdata(argc, argv, &data))
+		return(printf(RED"Error: "CLEAR"%s\n", "malloc failed"), 1); //i don't need to free the data->philo cause if the malloc failed the pointer is null
+	if (!ft_init_sphilo(&data)) // it returns non zero only if it failed
+		return(printf(RED"Error: "CLEAR "%s\n", "mlx_init failed"), 2);
 	data.start_time = current_mtime();
-	i = 0;
-	while (i < data.num_philos) //the comparison is with i as 0 but i inside the loop starts as 1
-		if (pthread_create(&data.philo[i].thread, NULL, &routine, &data.philo[i++]) != 0) //returns 0 in success
-			return(ft_error_exit("pthread_create failed.", &data, ), 1); //! i have to destroy the mutexes and joinn the threads
-	
+	// i = 0;
+	// while (i < data.num_philos) //the comparison is with i as 0 but i inside the loop starts as 1
+	// 	if (pthread_create(&data.philo[i].thread, NULL, &philos_routine, &data.philo[i++]) != 0) //returns 0 in success
+	// 		return(ft_clear_and_exit(data.philo, data.num_philos, true), \
+	// 			printf(RED "Error: " CLEAR "%s\n", "pthread_create failed"), 3); //! i have to destroy the mutexes and joinn the threads
+	// //* death watch thread
 	// create the threads: philos and death/monitor thread
 	// join the threads.
 	// destroy all the mutexes for the forks
