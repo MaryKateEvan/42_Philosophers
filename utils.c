@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/01/30 05:08:18 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/01/30 19:15:55 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_msleep(unsigned long msec)
 
 	start = current_mtime();
 	while ((current_mtime() - start) < msec)
-		usleep(50);
+		usleep(100);
 }
 
 bool	ft_exit(char *msg, t_philo *philo, int num, bool join)
@@ -69,24 +69,24 @@ void	ft_print_action(t_philo *philo, t_state action)
 {
 	unsigned long	now;
 	
-	// pthread_mutex_lock(&philo->data->print);
-	printf("hello form print function\n");
+	pthread_mutex_lock(&philo->data->print);
 	now = current_mtime() - philo->data->start_time;
 	if (action == takes_fork)
-		printf("%lu %d %s\n", now, philo->id, BR_BLUE "has taken a fork" CLEAR);
+		printf("%lu %d %s\n", now, philo->id,"has taken a fork");
 	else if (action == eats)
-		printf("%lu %d %s\n", now, philo->id, BLUE "is eating" CLEAR);
+		printf("%lu %d %s\n", now, philo->id, "is eating");
 	else if (action == sleeps)
-		printf("%lu %d %s\n", now, philo->id, MAGENTA "is sleeping" CLEAR);
+		printf("%lu %d %s\n", now, philo->id, "is sleeping");
 	else if (action == thinks)
-		printf("%lu %d %s\n", now, philo->id, YELLOW "is thinking" CLEAR);
+		printf("%lu %d %s\n", now, philo->id, "is thinking");
 	else if (action == is_dead)
-		printf("%lu %d %s\n", now, philo->id, RED "died" CLEAR);
-	else
-		printf("%lu %s\n", now, GREEN "all philos ate enough!" CLEAR);
-	// pthread_mutex_unlock(&philo->data->print);
+		printf("%lu %d %s\n", now, philo->id, "died");
+	// else
+	// 	printf("%lu %s\n", now, "all philos ate enough!");
+	pthread_mutex_unlock(&philo->data->print);
 }
 
+//* the previous printing fucntion with the colours:
 // void	ft_print_action(t_philo *phil, t_state action)
 // {
 // 	char	*s;

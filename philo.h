@@ -6,13 +6,13 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/01/30 05:08:35 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/01/30 20:04:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-# include <unistd.h>
+# include <unistd.h> //also for the usleep
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
@@ -47,8 +47,6 @@
 // Define macros for colored output
 # define ERROR "\x1B[31mError: \x1B[0m"
 
-typedef struct s_philo t_philo;
-
 typedef enum e_state
 {
 	takes_fork,
@@ -58,6 +56,24 @@ typedef enum e_state
 	is_dead,
 	finished
 }	t_state;
+
+typedef struct s_data t_data;
+
+typedef struct s_philo
+{
+	pthread_t		thread;
+	int				id;
+	unsigned long	t_until_death;
+	// unsigned long	started_eat;
+	unsigned int	times_ate;
+	bool			is_eating;
+	bool			finished; //yes if the philo ate notepme
+	pthread_mutex_t	r_fork;
+	pthread_mutex_t	*l_fork;
+	// pthread_mutex_t	philo_lock; //i haven't used it yet
+	t_data			*data;
+	pthread_mutex_t	lock_philo;
+}	t_philo;
 
 typedef struct s_data
 {
@@ -69,26 +85,13 @@ typedef struct s_data
 	t_philo			*philo;
 	unsigned long	start_time; //! long or int?
 	bool			any_dead;
+	bool			done_eating;
 	pthread_mutex_t	dead; //to protect the modification of this struct's data
 	int				philos_done;
 	pthread_mutex_t	done;
 	pthread_mutex_t	print; //to protect the modification of this struct's data
+	pthread_mutex_t	lock;
 }	t_data;
-
-typedef struct s_philo
-{
-	pthread_t		thread;
-	int				id;
-	unsigned long	t_until_death;
-	// unsigned long	started_eat;
-	unsigned int	times_ate;
-	bool			finished; //yes if the philo ate notepme
-	pthread_mutex_t	r_fork;
-	pthread_mutex_t	*l_fork;
-	// pthread_mutex_t	philo_lock; //i haven't used it yet
-	t_data			*data;
-}	t_philo;
-
 
 unsigned long	ft_atoul(const char *str);
 unsigned long	current_mtime(void);
