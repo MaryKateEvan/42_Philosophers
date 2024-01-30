@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/01/30 00:47:53 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/01/30 04:52:54 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,25 @@ bool	ft_input_is_valid(int argc, char **argv)
 
 bool ft_init_sdata(int argc, char **argv, t_data *data)
 {
-	data->num_philos = (int)ft_atoui(argv[0]);
+	data->num_philos = (int)ft_atoul(argv[0]);
+	// printf("num of philos received is: %d\n", data->num_philos);
 	if (data->num_philos > 200)
 		return (printf(ERROR "philos can not be more than 200.\n"), false);
-	data->t_die = ft_atoui(argv[1]);
-	data->t_eat = ft_atoui(argv[2]);
-	data->t_sleep = ft_atoui(argv[3]);
+	data->t_die = ft_atoul(argv[1]);
+	data->t_eat = ft_atoul(argv[2]);
+	data->t_sleep = ft_atoul(argv[3]);
 	data->notepme = 0;
 	data->any_dead = false;
 	data->philos_done = 0;
+	data->start_time = current_mtime();
 	if (argc == 6)
-		data->notepme = ft_atoui(argv[4]);
-	if (pthread_mutex_init(&data->dead, NULL) || pthread_mutex_init(&data->done,
-		NULL) || pthread_mutex_init(&data->print, NULL)) //returns 0 in success
-			return (printf(ERROR "pthread_mutex_init_failed.\n"), false);
+		data->notepme = (unsigned int)ft_atoul(argv[4]);
+	if (pthread_mutex_init(&data->dead, NULL))
+		return (printf(ERROR "pthread_mutex_init_failed.\n"), false);
+	if (pthread_mutex_init(&data->done, NULL))
+		return (printf(ERROR "pthread_mutex_init_failed.\n"), false);
+	if (pthread_mutex_init(&data->print, NULL)) //returns 0 in success
+		return (printf(ERROR "pthread_mutex_init_failed.\n"), false);
 	return (true);
 }
 
@@ -71,8 +76,8 @@ bool	ft_init_sphilo(t_data *data)
 	while (++id <= data->num_philos) //i starts as 1
 	{
 		data->philo[id - 1].id = id;
-		// data->philo[id - 1].thread = 0; //do I actually need that?
-		data->philo[id - 1].eat_start = current_mtime();
+		data->philo[id - 1].thread = 0; //do I actually need that?
+		data->philo[id - 1].t_until_death = current_mtime() + data->t_die;
 		data->philo[id - 1].times_ate = 0;
 		data->philo[id - 1].finished = false;
 		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL)) //returns 0 in success
@@ -105,7 +110,7 @@ int	main(int argc, char **argv)
 {
 	t_data		data;
 	int			i;
-	pthread_t	check_dead;
+	// pthread_t	check_dead;
 	// t_philo	*philos_ptr;
 	
 	if (!ft_input_is_valid(argc, ++argv))
@@ -114,17 +119,17 @@ int	main(int argc, char **argv)
 		return(printf("Failed to initialize data.\n"), 1); //i don't need to free the data->philo cause if the malloc failed the pointer is null
 	if (!ft_init_sphilo(&data)) // it returns non zero only if it failed
 		return(printf(ERROR "failed to initialize philos\n"), 2);
-	data.start_time = current_mtime();
-	i = 0;
+	printf("now is: %lu\n", current_mtime());
+	i = -1;
 	//? i create the philo threads first:
-	while (i++ < data.num_philos) //the comparison is with i as 0 but i inside the loop starts as 1
-		if (pthread_create(&data.philo[i - 1].thread, NULL, &philo_routine, &data.philo[i - 1])) //** i'm passing the data.phio as the 4th argument because the philos "don't communicate with each other"
+	while (++i < data.num_philos) //the comparison is with i as 0 but i inside the loop starts as 1
+		if (pthread_create(&data.philo[i].thread, NULL, &philo_routine, &data.philo[i])) //** i'm passing the data.phio as the 4th argument because the philos "don't communicate with each other"
 			return(ft_exit("pthread_create failed", data.philo, data.num_philos, true), 3);
 	//? and then the death patrol
-	if (pthread_create(&check_dead, NULL, &ft_death_patrol, data.philo))
-		return(ft_exit("pthread_create failed", data.philo, data.num_philos, true), 4);
-	//? and then i join the death thread
-	pthread_join(check_dead, NULL);
+	// if (pthread_create(&check_dead, NULL, &ft_death_patrol, data.philo))
+	// 	return(ft_exit("pthread_create failed", data.philo, data.num_philos, true), 4);
+	// //? and then i join the death thread
+	// pthread_join(check_dead, NULL);
 	//? and the philo threads: + destroy the mutexes
 	if (!ft_exit(NULL, data.philo, data.num_philos, true))
 		return(printf(ERROR "pthread_join failed\n"), 4);
