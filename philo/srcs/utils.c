@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/07 07:01:07 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 10:09:52 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,12 @@ void	ft_print_action(t_philo *philo, t_state action)
 	long	now;
 	bool	check;
 
+	pthread_mutex_lock(&philo->data->lock_print);
 	pthread_mutex_lock(&philo->data->lock_dead);
 	check = philo->data->any_dead;
 	pthread_mutex_unlock(&philo->data->lock_dead);
 	if (check == false)
 	{
-		pthread_mutex_lock(&philo->data->lock_print);
 		now = current_mtime() - philo->data->start_time;
 		if (action == takes_fork)
 			printf("%ld %d %s\n", now, philo->id, "has taken a fork");
@@ -93,10 +93,10 @@ void	ft_print_action(t_philo *philo, t_state action)
 			printf("%ld %d %s\n", now, philo->id, "is sleeping");
 		else if (action == thinks)
 			printf("%ld %d %s\n", now, philo->id, "is thinking");
-		else if (action == is_dead)
-			printf("%ld %d %s\n", now, philo->id, "died");
 		else
-			printf("%ld %s\n", now, "all philos ate enough!");
+			printf("%ld %d %s\n", now, philo->id, "died");
 		pthread_mutex_unlock(&philo->data->lock_print);
+		return ;
 	}
+	pthread_mutex_unlock(&philo->data->lock_print);
 }

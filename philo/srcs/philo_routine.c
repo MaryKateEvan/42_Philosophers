@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/07 06:59:08 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 09:03:43 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static void	ft_take_forks(t_philo *philo)
 {
 	if ((philo->id % 2 != 0))
 	{
+		usleep(300);
 		pthread_mutex_lock(&philo->r_fork);
 		ft_print_action(philo, takes_fork);
 		pthread_mutex_lock(philo->l_fork);
