@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 20:01:04 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:25:18 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 long long	ft_atoll(const char *str)
 {

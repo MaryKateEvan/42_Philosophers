@@ -6,11 +6,11 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 20:02:18 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:23:26 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 static bool	ft_input_is_valid(int argc, char **argv);
 static bool	ft_init_sdata(int argc, char **argv, t_data *data);
