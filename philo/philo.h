@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/07 07:03:00 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:07:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdint.h>
 
 # define ERROR "\x1B[31mError: \x1B[0m"
+# define INPUT "\x1B[31mInvalid input: \x1B[0m"
 
 typedef enum e_state
 {
@@ -28,8 +29,7 @@ typedef enum e_state
 	eats,
 	sleeps,
 	thinks,
-	is_dead,
-	finished
+	is_dead
 }	t_state;
 
 typedef struct s_data	t_data;
@@ -38,9 +38,8 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
-	long			t_of_death;
-	unsigned int	times_ate;
-	bool			is_eating;
+	long long		t_of_death;
+	long			times_ate;
 	t_data			*data;
 	pthread_mutex_t	r_fork;
 	pthread_mutex_t	*l_fork;
@@ -50,28 +49,31 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int				num_philos;
-	long			t_die;
-	long			t_eat;
-	long			t_sleep;
+	long long		t_die;
+	long long		t_eat;
+	long long		t_sleep;
 	long			notepme;
 	t_philo			*philo;
-	long			start_time;
+	long long		start_time;
 	bool			any_dead;
-	bool			done_eating;
 	int				philos_done;
 	pthread_mutex_t	lock_dead;
 	pthread_mutex_t	lock_done;
 	pthread_mutex_t	lock_print;
 }	t_data;
 
-long		ft_atol(const char *str);
-time_t		current_mtime(void);
-void		ft_msleep(long msec);
+/* ------------------------------ UTILS ------------------------------ */
+long long	ft_atoll(const char *str);
+long long	current_mtime(void);
+void		ft_msleep(long long msec);
 bool		ft_exit(char *msg, t_philo *philo, int num, bool join);
+void		ft_print_action(t_philo *philo, t_state action);
 
+/* ---------------------------- ROUTINES ----------------------------- */
 void		*philo_routine(void *arg);
 void		*supervisor_routine(void *arg);
-void		ft_print_action(t_philo *philo, t_state action);
+
+/* ----------------------------- CONTROL ----------------------------- */
 bool		reached_the_end(t_data *data);
 bool		no_philo_dead(t_philo *philo);
 bool		reached_the_end(t_data *data);
