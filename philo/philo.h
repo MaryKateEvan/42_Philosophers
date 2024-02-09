@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 17:47:20 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:03:22 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,7 @@ typedef struct s_data
 	pthread_mutex_t	lock_print;
 }	t_data;
 
-/* ------------------------------ UTILS ------------------------------ */
-long long	ft_atoll(const char *str);
-long long	current_mtime(void);
-void		ft_msleep(long long msec);
-bool		ft_exit(char *msg, t_data *data, int num, bool join);
-void		ft_print_action(t_philo *philo, t_state action);
-
-/* ---------------------------- ROUTINES ----------------------------- */
+/* ----------------------------- ROUTINE ----------------------------- */
 void		*philo_routine(void *arg);
 void		*supervisor_routine(void *arg);
 
@@ -77,5 +70,12 @@ void		*supervisor_routine(void *arg);
 bool		reached_the_end(t_data *data);
 bool		no_philo_dead(t_philo *philo);
 bool		reached_the_end(t_data *data);
+
+/* ------------------------------ UTILS ------------------------------ */
+long long	ft_atoll(const char *str);
+long long	current_mtime(void);
+void		ft_msleep(long long msec);
+bool		ft_exit(char *msg, t_data *data, int num, bool join);
+void		ft_print_action(t_philo *philo, t_state action);
 
 #endif //PHILO_H

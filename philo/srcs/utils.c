@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 18:04:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:01:04 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,50 +39,24 @@ void	ft_msleep(long long msec)
 
 	start = current_mtime();
 	while ((current_mtime() - start) < msec)
-		usleep(200); //! i changed that. it was 200 before. check which one is better
+		usleep(200);
 }
 
-// // the versin with t_philo as 2nd argument:
-// bool	ft_exit(char *msg, t_philo *philo, int num, bool join)
-// {
-// 	int	i;
-
-// 	if (msg != NULL)
-// 		printf(ERROR "%s\n", msg);
-// 	i = -1;
-// 	if (join == true) //! i deleted all the brackets inside here:
-// 	{
-// 		while (++i < num)
-// 			if (philo[i].thread)
-// 				if (pthread_join(philo[i].thread, NULL) != 0)
-// 					return (false);
-// 	}
-// 	pthread_mutex_destroy(&philo->data->lock_dead);
-// 	pthread_mutex_destroy(&philo->data->lock_done);
-// 	pthread_mutex_destroy(&philo->data->lock_print);
-// 	while (philo != NULL && num--)
-// 	{
-// 		pthread_mutex_destroy(&philo[num].r_fork);
-// 		pthread_mutex_destroy(&philo[num].lock_eating);
-// 	}
-// 	free(philo);
-// 	return (true);
-// }
-
-// the version with t_data as the econd argument:
 bool	ft_exit(char *msg, t_data *data, int num, bool join)
 {
-	int	i;
+	int		i;
+	bool	ret;
 
 	if (msg != NULL)
 		printf(ERROR "%s\n", msg);
 	i = -1;
-	if (join == true) //! i deleted all the brackets inside here:
+	ret = true;
+	if (join == true)
 	{
 		while (++i < num)
 			if (data->philo[i].thread)
 				if (pthread_join(data->philo[i].thread, NULL) != 0)
-					return (false); //? should i actually protect it or let it continue to join the rest of the threads at least? maybe to save a variable "false" there and return it at the end so that it can destroy the mutexes. 
+					ret = false;
 	}
 	pthread_mutex_destroy(&data->lock_dead);
 	pthread_mutex_destroy(&data->lock_done);
@@ -93,7 +67,7 @@ bool	ft_exit(char *msg, t_data *data, int num, bool join)
 		pthread_mutex_destroy(&data->philo[num].lock_eating);
 	}
 	free(data->philo);
-	return (true);
+	return (ret);
 }
 
 void	ft_print_action(t_philo *philo, t_state action)

@@ -6,40 +6,11 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 16:41:38 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:10:55 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-
-bool	reached_the_end(t_data *data)
-{
-	bool	ret;
-
-	ret = false;
-	pthread_mutex_lock(&data->lock_dead);
-	if (data->any_dead == true)
-		ret = true;
-	pthread_mutex_unlock(&data->lock_dead);
-	if (data->notepme > 0)
-	{
-		pthread_mutex_lock(&data->lock_done);
-		if (data->philos_done == data->num_philos)
-			ret = true;
-		pthread_mutex_unlock(&data->lock_done);
-	}
-	return (ret);
-}
-
-bool	no_philo_dead(t_philo *philo)
-{
-	bool	check;
-
-	pthread_mutex_lock(&philo->data->lock_dead);
-	check = philo->data->any_dead;
-	pthread_mutex_unlock(&philo->data->lock_dead);
-	return (!check);
-}
 
 void	*supervisor_routine(void *arg)
 {
@@ -68,4 +39,33 @@ void	*supervisor_routine(void *arg)
 			i = 0;
 	}
 	return (NULL);
+}
+
+bool	reached_the_end(t_data *data)
+{
+	bool	ret;
+
+	ret = false;
+	pthread_mutex_lock(&data->lock_dead);
+	if (data->any_dead == true)
+		ret = true;
+	pthread_mutex_unlock(&data->lock_dead);
+	if (data->notepme > 0)
+	{
+		pthread_mutex_lock(&data->lock_done);
+		if (data->philos_done == data->num_philos)
+			ret = true;
+		pthread_mutex_unlock(&data->lock_done);
+	}
+	return (ret);
+}
+
+bool	no_philo_dead(t_philo *philo)
+{
+	bool	check;
+
+	pthread_mutex_lock(&philo->data->lock_dead);
+	check = philo->data->any_dead;
+	pthread_mutex_unlock(&philo->data->lock_dead);
+	return (!check);
 }

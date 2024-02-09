@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 17:53:12 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 20:02:18 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static bool	ft_init_sphilo(t_data *data)
 		data->philo[id - 1].data = data;
 		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL) != 0)
 			return (ft_exit("mutex_init for philo failed", data, --id, false),
-					false);
+				false);
 		if (pthread_mutex_init(&data->philo->lock_eating, NULL) != 0)
 			return (pthread_mutex_destroy(&data->philo[id - 1].r_fork),
 				ft_exit("mutex_init failed", data, --id, false), false);
@@ -123,8 +123,9 @@ static bool	ft_threads(t_data *data)
 		return (ft_exit("pthread_create failed", data, data->num_philos,
 				false), false);
 	if (pthread_join(supervisor, NULL) != 0)
-		return (printf(ERROR "pthread_join failed\n"), false);
-	if (!ft_exit(NULL, data->philo, data->num_philos, true))
+		return (ft_exit("pthread_join failed", data, data->num_philos, true),
+			false);
+	if (ft_exit(NULL, data, data->num_philos, true) == false)
 		return (printf(ERROR "pthread_join failed\n"), false);
 	return (true);
 }
