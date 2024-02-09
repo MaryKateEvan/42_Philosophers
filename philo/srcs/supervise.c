@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/07 07:00:18 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:41:38 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ void	*supervisor_routine(void *arg)
 	while (reached_the_end(data) == false)
 	{
 		pthread_mutex_lock(&data->philo[i].lock_eating);
-		if (current_mtime() >= data->philo[i].t_of_death
-			&& data->philo[i].is_eating == false)
+		if (current_mtime() >= data->philo[i].t_of_death)
 		{
 			ft_print_action(&data->philo[i], is_dead);
 			pthread_mutex_lock(&data->lock_dead);
@@ -61,6 +60,10 @@ void	*supervisor_routine(void *arg)
 			return (pthread_mutex_unlock(&data->philo[i].lock_eating), NULL);
 		}
 		pthread_mutex_unlock(&data->philo[i].lock_eating);
+		pthread_mutex_lock(&data->lock_done);
+		if (data->philo[i].times_ate == data->notepme)
+			(data->philos_done)++;
+		pthread_mutex_unlock(&data->lock_done);
 		if (++i == data->num_philos)
 			i = 0;
 	}

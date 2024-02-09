@@ -6,15 +6,15 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 10:09:52 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 15:56:31 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-long	ft_atol(const char *str)
+long long	ft_atoll(const char *str)
 {
-	long	num;
+	long long	num;
 
 	num = 0;
 	while (*str >= '0' && *str <= '9')
@@ -25,7 +25,7 @@ long	ft_atol(const char *str)
 	return (num);
 }
 
-time_t	current_mtime(void)
+long long	current_mtime(void)
 {
 	struct timeval	time;
 
@@ -33,15 +33,13 @@ time_t	current_mtime(void)
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
-void	ft_msleep(long msec)
+void	ft_msleep(long long msec)
 {
-	time_t	start;
+	long long	start;
 
 	start = current_mtime();
 	while ((current_mtime() - start) < msec)
-	{
-		usleep(200);
-	}
+		usleep(100); //! i changed that. it was 200 before. check which one is better
 }
 
 bool	ft_exit(char *msg, t_philo *philo, int num, bool join)
@@ -50,16 +48,13 @@ bool	ft_exit(char *msg, t_philo *philo, int num, bool join)
 
 	if (msg != NULL)
 		printf(ERROR "%s\n", msg);
-	i = 0;
-	if (join == true)
+	i = -1;
+	if (join == true) //! i deleted all the brackets inside here:
 	{
-		while (i < num)
-		{
+		while (++i < num)
 			if (philo[i].thread)
 				if (pthread_join(philo[i].thread, NULL) != 0)
 					return (false);
-			i++;
-		}
 	}
 	pthread_mutex_destroy(&philo->data->lock_dead);
 	pthread_mutex_destroy(&philo->data->lock_done);
@@ -75,26 +70,22 @@ bool	ft_exit(char *msg, t_philo *philo, int num, bool join)
 
 void	ft_print_action(t_philo *philo, t_state action)
 {
-	long	now;
-	bool	check;
+	long long	now;
 
 	pthread_mutex_lock(&philo->data->lock_print);
-	pthread_mutex_lock(&philo->data->lock_dead);
-	check = philo->data->any_dead;
-	pthread_mutex_unlock(&philo->data->lock_dead);
-	if (check == false)
+	if (no_philo_dead(philo))
 	{
 		now = current_mtime() - philo->data->start_time;
 		if (action == takes_fork)
-			printf("%ld %d %s\n", now, philo->id, "has taken a fork");
+			printf("%lld %d %s\n", now, philo->id, "has taken a fork");
 		else if (action == eats)
-			printf("%ld %d %s\n", now, philo->id, "is eating");
+			printf("%lld %d %s\n", now, philo->id, "is eating");
 		else if (action == sleeps)
-			printf("%ld %d %s\n", now, philo->id, "is sleeping");
+			printf("%lld %d %s\n", now, philo->id, "is sleeping");
 		else if (action == thinks)
-			printf("%ld %d %s\n", now, philo->id, "is thinking");
+			printf("%lld %d %s\n", now, philo->id, "is thinking");
 		else
-			printf("%ld %d %s\n", now, philo->id, "died");
+			printf("%lld %d %s\n", now, philo->id, "died");
 		pthread_mutex_unlock(&philo->data->lock_print);
 		return ;
 	}

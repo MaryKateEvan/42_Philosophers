@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 09:03:43 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 16:03:13 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,25 +48,21 @@ static void	ft_leave_forks(t_philo *philo)
 void	ft_eat(t_philo *philo)
 {
 	ft_take_forks(philo);
-	ft_print_action(philo, eats);
 	pthread_mutex_lock(&philo->lock_eating);
-	philo->is_eating = true;
 	philo->t_of_death = current_mtime() + philo->data->t_die;
 	pthread_mutex_unlock(&philo->lock_eating);
+	ft_print_action(philo, eats);
 	ft_msleep(philo->data->t_eat);
 	ft_leave_forks(philo);
-	pthread_mutex_lock(&philo->lock_eating);
-	philo->is_eating = false;
-	pthread_mutex_unlock(&philo->lock_eating);
 	if (philo->data->notepme > 0)
 	{
 		pthread_mutex_lock(&philo->lock_eating);
 		(philo->times_ate)++;
 		pthread_mutex_unlock(&philo->lock_eating);
-		pthread_mutex_lock(&philo->data->lock_done);
-		if (philo->times_ate == philo->data->notepme)
-			(philo->data->philos_done)++;
-		pthread_mutex_unlock(&philo->data->lock_done);
+		// pthread_mutex_lock(&philo->data->lock_done);
+		// if (philo->times_ate == philo->data->notepme)
+		// 	(philo->data->philos_done)++;
+		// pthread_mutex_unlock(&philo->data->lock_done);
 	}
 }
 
