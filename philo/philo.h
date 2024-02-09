@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 16:07:36 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:47:20 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_data
 long long	ft_atoll(const char *str);
 long long	current_mtime(void);
 void		ft_msleep(long long msec);
-bool		ft_exit(char *msg, t_philo *philo, int num, bool join);
+bool		ft_exit(char *msg, t_data *data, int num, bool join);
 void		ft_print_action(t_philo *philo, t_state action);
 
 /* ---------------------------- ROUTINES ----------------------------- */

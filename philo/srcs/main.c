@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 16:58:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:53:12 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,21 +88,20 @@ static bool	ft_init_sphilo(t_data *data)
 	id = 0;
 	data->philo = malloc(sizeof(t_philo) * (data->num_philos));
 	if (data->philo == NULL)
-		return (pthread_mutex_destroy(&data->lock_dead),
-			pthread_mutex_destroy(&data->lock_done), pthread_mutex_destroy(&data
-				->lock_print), printf(ERROR "malloc failed.\n"), false);
+		return (ft_exit("malloc failed", data, 0, false), false);
 	while (++id <= data->num_philos)
 	{
 		data->philo[id - 1].id = id;
+		data->philo[id - 1].thread = 0;
 		data->philo[id - 1].times_ate = 0;
 		data->philo[id - 1].t_of_death = current_mtime() + data->t_die;
 		data->philo[id - 1].data = data;
 		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL) != 0)
-			return (ft_exit("mutex_init for philo failed", data->philo, --id,
-					false), false);
+			return (ft_exit("mutex_init for philo failed", data, --id, false),
+					false);
 		if (pthread_mutex_init(&data->philo->lock_eating, NULL) != 0)
 			return (pthread_mutex_destroy(&data->philo[id - 1].r_fork),
-				ft_exit("mutex_init failed", data->philo, --id, false), false);
+				ft_exit("mutex_init failed", data, --id, false), false);
 		if (id > 1)
 			data->philo[id - 1].l_fork = &data->philo[id - 2].r_fork;
 	}
@@ -119,10 +118,9 @@ static bool	ft_threads(t_data *data)
 	while (++i < data->num_philos)
 		if (pthread_create(&(data->philo[i].thread), NULL, &philo_routine,
 				&data->philo[i]))
-			return (ft_exit("pthread_create failed", data->philo, i,
-					true), false);
+			return (ft_exit("pthread_create failed", data, i, true), false);
 	if (pthread_create(&supervisor, NULL, &supervisor_routine, data) != 0)
-		return (ft_exit("pthread_create failed", data->philo, data->num_philos,
+		return (ft_exit("pthread_create failed", data, data->num_philos,
 				false), false);
 	if (pthread_join(supervisor, NULL) != 0)
 		return (printf(ERROR "pthread_join failed\n"), false);
