@@ -6,7 +6,7 @@
 #    By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/28 16:25:24 by mevangel          #+#    #+#              #
-#    Updated: 2024/02/09 20:22:30 by mevangel         ###   ########.fr        #
+#    Updated: 2024/02/10 17:08:27 by mevangel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRC_DIR	=	./
 OBJ_DIR	=	./objs/
 
 SRC		=	$(SRC_DIR)main.c \
-			$(SRC_DIR)philo_routine.c \
+			$(SRC_DIR)routine.c \
 			$(SRC_DIR)supervise.c \
 			$(SRC_DIR)utils.c
 
