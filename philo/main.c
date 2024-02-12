@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/12 03:40:28 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/12 05:26:59 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static bool	ft_init_sphilo(t_data *data)
 		data->philo[id - 1].id = id;
 		data->philo[id - 1].thread = 0;
 		data->philo[id - 1].times_ate = 0;
+		data->philo[id - 1].is_done = false;
 		data->philo[id - 1].t_of_death = current_mtime() + data->t_die;
 		data->philo[id - 1].data = data;
 		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL) != 0)

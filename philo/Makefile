@@ -6,14 +6,14 @@
 #    By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/28 16:25:24 by mevangel          #+#    #+#              #
-#    Updated: 2024/02/10 17:08:27 by mevangel         ###   ########.fr        #
+#    Updated: 2024/02/12 05:59:21 by mevangel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 GREEN	=	\033[0;32m
 CYAN	=	\033[0;36m

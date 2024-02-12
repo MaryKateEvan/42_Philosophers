@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 20:03:22 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/12 05:26:45 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_philo
 	int				id;
 	long long		t_of_death;
 	long			times_ate;
+	bool			is_done;
 	t_data			*data;
 	pthread_mutex_t	r_fork;
 	pthread_mutex_t	*l_fork;
