@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 20:23:26 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/12 03:40:28 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static bool	ft_init_sphilo(t_data *data)
 		if (pthread_mutex_init(&data->philo[id - 1].r_fork, NULL) != 0)
 			return (ft_exit("mutex_init for philo failed", data, --id, false),
 				false);
-		if (pthread_mutex_init(&data->philo->lock_eating, NULL) != 0)
+		if (pthread_mutex_init(&data->philo[id - 1].lock_eating, NULL) != 0)
 			return (pthread_mutex_destroy(&data->philo[id - 1].r_fork),
 				ft_exit("mutex_init failed", data, --id, false), false);
 		if (id > 1)
