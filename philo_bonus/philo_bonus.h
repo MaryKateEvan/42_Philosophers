@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/15 04:07:40 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/15 07:12:29 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,12 @@ typedef struct s_data	t_data;
 
 typedef struct s_philo
 {
+	pthread_t		thread;
 	int				id;
 	long long		t_of_death;
 	long			times_ate;
 	bool			is_done;
-	// t_data			*data;
+	t_data			*data;
 	char			*sem_name;
 	sem_t			*sem_eating;
 }	t_philo;
@@ -58,27 +59,26 @@ typedef struct s_data
 	long long	start_time;
 	bool		any_dead;
 	int			philos_done;
+	sem_t		*forks;
 	sem_t		*sem_dead;
 	sem_t		*sem_done;
 	sem_t		*sem_print;
 }	t_data;
 
 /* ----------------------------- ROUTINE ----------------------------- */
-void		*philo_routine(t_philo *philo, t_data *data, sem_t *forks);
+void		*philo_routine(void *arg);
 void		*supervisor_routine(void *arg);
 
 /* ----------------------------- CONTROL ----------------------------- */
 bool		reached_the_end(t_data *data);
-bool		no_philo_dead(t_data *data);
-bool		reached_the_end(t_data *data);
+bool		no_philo_dead(t_philo *philo);
 
 /* ------------------------------ UTILS ------------------------------ */
 long long	ft_atoll(const char *str);
 long long	current_mtime(void);
 void		ft_msleep(long long msec);
 void		ft_exit(char *msg, t_data *data, int num, int exit_code);
-void		ft_print_action(t_philo *philo, t_state action, t_data *data);
-
+void		ft_print_action(t_philo *philo, t_state action);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_itoa(int n);
 

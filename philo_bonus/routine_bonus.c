@@ -6,38 +6,38 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/15 04:05:56 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/16 03:32:56 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static void	one_philo_routine(t_philo *philo, t_data *data, sem_t *forks)
+static void	one_philo_routine(t_philo *philo)
 {
-	sem_wait(forks);
-	ft_print_action(philo, takes_fork, data);
+	sem_wait(philo->data->forks);
+	ft_print_action(philo, takes_fork);
 	sem_wait(philo->sem_eating);
-	philo->t_of_death = current_mtime() + data->t_die;
+	philo->t_of_death = current_mtime() + philo->data->t_die;
 	sem_post(philo->sem_eating);
-	sem_post(forks);
+	sem_post(philo->data->forks);
 }
 
-static void	ft_eat(t_philo *philo, t_data *data, sem_t *forks)
+static void	ft_eat(t_philo *philo)
 {
 	if ((philo->id % 2 != 0))
 		usleep(300);
-	sem_wait(forks);
-	ft_print_action(philo, takes_fork, data);
-	sem_wait(forks);
-	ft_print_action(philo, takes_fork, data);
+	sem_wait(philo->data->forks);
+	ft_print_action(philo, takes_fork);
+	sem_wait(philo->data->forks);
+	ft_print_action(philo, takes_fork);
 	sem_wait(philo->sem_eating);
-	philo->t_of_death = current_mtime() + data->t_die;
+	philo->t_of_death = current_mtime() + philo->data->t_die;
 	sem_post(philo->sem_eating);
-	ft_print_action(philo, eats, data);
-	ft_msleep(data->t_eat);
-	sem_post(forks);
-	sem_post(forks);
-	if (data->notepme > 0)
+	ft_print_action(philo, eats);
+	ft_msleep(philo->data->t_eat);
+	sem_post(philo->data->forks);
+	sem_post(philo->data->forks);
+	if (philo->data->notepme > 0)
 	{
 		sem_wait(philo->sem_eating);
 		(philo->times_ate)++;
@@ -45,25 +45,30 @@ static void	ft_eat(t_philo *philo, t_data *data, sem_t *forks)
 	}
 }
 
-void	*philo_routine(t_philo *philo, t_data *data, sem_t *forks)
+
+
+void	*philo_routine(void *arg)
 {
-	if (data->num_philos == 1)
-		return (one_philo_routine(philo, data, forks), NULL);
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	if (philo->data->num_philos == 1)
+		return (one_philo_routine(philo), NULL);
 	if (philo->id % 2 != 0)
 	{
-		ft_print_action(philo, thinks, data);
-		ft_msleep(data->t_eat / 2);
+		ft_print_action(philo, thinks);
+		ft_msleep(philo->data->t_eat / 2);
 	}
-	while (reached_the_end(data) == false)
+	while (reached_the_end(philo->data) == false)
 	{
-		ft_eat(philo, data, forks);
-		if (reached_the_end(data))
-			break ; //?should i change it to exit, so that i exit from the process?
-		ft_print_action(philo, sleeps, data);
-		ft_msleep(data->t_sleep);
-		if (reached_the_end(data))
+		ft_eat(philo);
+		if (reached_the_end(philo->data))
 			break ;
-		ft_print_action(philo, thinks, data);
+		ft_print_action(philo, sleeps);
+		ft_msleep(philo->data->t_sleep);
+		if (reached_the_end(philo->data))
+			break ;
+		ft_print_action(philo, thinks);
 	}
 	return (NULL);
 }

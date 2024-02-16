@@ -6,52 +6,61 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/15 04:38:56 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/16 05:11:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static void	check_meals(t_data *data, int i)
+static void	check_meals(t_philo *philo)
 {
 	long	num;
 
-	sem_wait(data->philo[i].sem_eating);
-	num = data->philo[i].times_ate;
-	sem_post(data->philo[i].sem_eating);
-	if (num == data->notepme && data->philo[i].is_done == false)
+	sem_wait(philo->sem_eating);
+	num = philo->times_ate;
+	sem_post(philo->sem_eating);
+	if (num == philo->data->notepme && philo->is_done == false)
 	{
-		data->philo[i].is_done = true;
-		sem_wait(data->sem_done);
-		(data->philos_done)++;
-		sem_post(data->sem_done);
+		philo->is_done = true;
+		// sem_wait(philo->data->sem_done);
+		// (philo->data->philos_done)++;
+		// sem_post(philo->data->sem_done);
+
+			sem_wait(philo->data->sem_dead);
+			// sem_wait(philo->data->sem_print);
+			philo->data->any_dead = true;
+			sem_post(philo->data->sem_dead);
 	}
 }
 
 void	*supervisor_routine(void *arg)
 {
-	t_data		*data;
-	int			i;
+	t_philo		*philo;
+	// int			i;
 	long long	death_time;
 
-	data = (t_data *)arg;
-	i = 0;
-	while (reached_the_end(data) == false)
+	philo = (t_philo *)arg;
+	// i = 0;
+	// usleep(450);
+	while (reached_the_end(philo->data) == false)
 	{
-		sem_wait(data->philo[i].sem_eating);
-		death_time = data->philo[i].t_of_death;
-		sem_post(data->philo[i].sem_eating);
+		sem_wait(philo->sem_eating);
+		death_time = philo->t_of_death;
+		sem_post(philo->sem_eating);
 		if (current_mtime() >= death_time)
 		{
-			ft_print_action(&data->philo[i], is_dead, data);
-			sem_wait(data->sem_dead);
-			data->any_dead = true;
-			sem_post(data->sem_dead);
+			ft_print_action(philo, is_dead);
+			sem_wait(philo->data->sem_dead);
+			philo->data->any_dead = true;
+			sem_post(philo->data->sem_dead);
+			// exit(0);
+			// printf("%lld %d %s\n", current_mtime() - philo->data->start_time, philo->id, "died");
+			// sem_post(philo->data->sem_print);
 			return (NULL);
 		}
-		check_meals(data, i);
-		if (++i == data->num_philos)
-			i = 0;
+		check_meals(philo);
+		// if (++i == data->num_philos)
+		// 	i = 0;
 	}
 	return (NULL);
 }
@@ -75,12 +84,12 @@ bool	reached_the_end(t_data *data)
 	return (ret);
 }
 
-bool	no_philo_dead(t_data *data)
+bool	no_philo_dead(t_philo *philo)
 {
 	bool	check;
 
-	sem_wait(data->sem_dead);
-	check = data->any_dead;
-	sem_post(data->sem_dead);
+	sem_wait(philo->data->sem_dead);
+	check = philo->data->any_dead;
+	sem_post(philo->data->sem_dead);
 	return (!check);
 }

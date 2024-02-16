@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:58:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/15 00:45:07 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/15 06:25:08 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		joined[i] = s1[i];
 	while (s2[++j] != '\0')
 		joined[i + j] = s2[j];
-	free(s1);
 	free(s2);
 	return (joined);
 }
