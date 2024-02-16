@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/16 03:32:56 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/16 08:06:30 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ static void	ft_eat(t_philo *philo)
 	sem_post(philo->data->forks);
 	if (philo->data->notepme > 0)
 	{
-		sem_wait(philo->sem_eating);
-		(philo->times_ate)++;
-		sem_post(philo->sem_eating);
+		if (++(philo->times_ate) == philo->data->notepme &&
+			philo->is_done == false)
+		{
+			philo->is_done = true;
+			sem_post(philo->sem_is_done);
+		}
 	}
 }
-
-
 
 void	*philo_routine(void *arg)
 {
@@ -59,15 +60,15 @@ void	*philo_routine(void *arg)
 		ft_print_action(philo, thinks);
 		ft_msleep(philo->data->t_eat / 2);
 	}
-	while (reached_the_end(philo->data) == false)
+	while (1)
 	{
 		ft_eat(philo);
-		if (reached_the_end(philo->data))
-			break ;
+		// if (reached_the_end(philo->data))
+		// 	break ;
 		ft_print_action(philo, sleeps);
 		ft_msleep(philo->data->t_sleep);
-		if (reached_the_end(philo->data))
-			break ;
+		// if (reached_the_end(philo->data))
+		// 	break ;
 		ft_print_action(philo, thinks);
 	}
 	return (NULL);

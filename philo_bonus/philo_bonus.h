@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/15 07:12:29 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/16 06:40:02 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdint.h> //? do i actually need that?
 # include <semaphore.h>
 # include <sys/types.h> //for the pid_t type
+# include <signal.h> //for the kill and its macros
 
 # define ERROR "\x1B[31mError: \x1B[0m"
 # define INPUT "\x1B[31mInvalid input: \x1B[0m"
@@ -46,6 +47,8 @@ typedef struct s_philo
 	t_data			*data;
 	char			*sem_name;
 	sem_t			*sem_eating;
+	char			*sem_done_name;
+	sem_t			*sem_is_done;
 }	t_philo;
 
 typedef struct s_data
@@ -63,6 +66,7 @@ typedef struct s_data
 	sem_t		*sem_dead;
 	sem_t		*sem_done;
 	sem_t		*sem_print;
+	pid_t		*pid_array;
 }	t_data;
 
 /* ----------------------------- ROUTINE ----------------------------- */

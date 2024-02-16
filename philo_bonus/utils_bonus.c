@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/16 04:44:43 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/16 07:17:31 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	ft_exit(char *msg, t_data *data, int num, int exit_code)
 	}
 	if (data->philo)
 		free(data->philo);
+	free(data->pid_array);
 	if (exit_code > 0)
 		exit(exit_code);
 }
@@ -70,22 +71,20 @@ void	ft_print_action(t_philo *philo, t_state action)
 	long long	now;
 
 	sem_wait(philo->data->sem_print);
-	if (no_philo_dead(philo))
+	now = current_mtime() - philo->data->start_time;
+	if (action == takes_fork)
+		printf("%lld %d %s\n", now, philo->id, "has taken a fork");
+	else if (action == eats)
+		printf("%lld %d %s\n", now, philo->id, "is eating");
+	else if (action == sleeps)
+		printf("%lld %d %s\n", now, philo->id, "is sleeping");
+	else if (action == thinks)
+		printf("%lld %d %s\n", now, philo->id, "is thinking");
+	else
 	{
-		now = current_mtime() - philo->data->start_time;
-		if (action == takes_fork)
-			printf("%lld %d %s\n", now, philo->id, "has taken a fork");
-		else if (action == eats)
-			printf("%lld %d %s\n", now, philo->id, "is eating");
-		else if (action == sleeps)
-			printf("%lld %d %s\n", now, philo->id, "is sleeping");
-		else if (action == thinks)
-			printf("%lld %d %s\n", now, philo->id, "is thinking");
-		else
-			printf("%lld %d %s\n", now, philo->id, "died");
-		// sem_post(philo->data->sem_print);
-		// return ;
+		printf("%lld %d %s\n", now, philo->id, "died");
+		sem_post(philo->data->sem_dead);
+		return ;
 	}
-	if (action != is_dead)
-		sem_post(philo->data->sem_print);
+	sem_post(philo->data->sem_print);
 }
