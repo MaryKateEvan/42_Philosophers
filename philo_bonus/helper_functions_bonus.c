@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   helper_functions_bonus.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 16:58:51 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/16 08:49:30 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/17 12:29:33 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		j;
 	int		size;
 
+	if (s2 == NULL)
+		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	joined = malloc(size);
 	if (!joined)
-		return (NULL);  //! i must check the protection for here
+		return (NULL);
 	joined[size - 1] = '\0';
 	i = -1;
 	j = -1;
@@ -57,7 +59,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (joined);
 }
 
-char	*ft_small_itoa(int n)
+char	*small_itoa(int n)
 {
 	char	*ptr;
 	int		len;
@@ -73,7 +75,8 @@ char	*ft_small_itoa(int n)
 	}
 	ptr = (char *)malloc((len + 1) * sizeof(char));
 	if (ptr == NULL)
-		return (NULL); //! i need to check better the protection for here
+		return (NULL);
+	ptr[len] = '\0';
 	i = 0;
 	while (len > i)
 	{
@@ -81,6 +84,5 @@ char	*ft_small_itoa(int n)
 		len--;
 		n = n / 10;
 	}
-	ptr[len] = '\0';
 	return (ptr);
 }

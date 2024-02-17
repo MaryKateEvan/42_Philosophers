@@ -6,12 +6,12 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/16 06:40:02 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/17 14:07:50 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 # include <unistd.h> //also for the usleep
 # include <stdlib.h>
 # include <stdio.h>
@@ -20,6 +20,7 @@
 # include <sys/time.h> //for the gettimeofday 
 # include <stdint.h> //? do i actually need that?
 # include <semaphore.h>
+# include <fcntl.h> // for the O_CREATE macro
 # include <sys/types.h> //for the pid_t type
 # include <signal.h> //for the kill and its macros
 
@@ -45,9 +46,9 @@ typedef struct s_philo
 	long			times_ate;
 	bool			is_done;
 	t_data			*data;
-	char			*sem_name;
-	sem_t			*sem_eating;
-	char			*sem_done_name;
+	char			*time_name;
+	sem_t			*lock_time;
+	char			*done_name;
 	sem_t			*sem_is_done;
 }	t_philo;
 
@@ -58,15 +59,12 @@ typedef struct s_data
 	long long	t_eat;
 	long long	t_sleep;
 	long		notepme;
-	t_philo		*philo;
 	long long	start_time;
-	bool		any_dead;
-	int			philos_done;
+	t_philo		*philo;
+	pid_t		*pid_array;
 	sem_t		*forks;
 	sem_t		*sem_dead;
-	sem_t		*sem_done;
 	sem_t		*sem_print;
-	pid_t		*pid_array;
 }	t_data;
 
 /* ----------------------------- ROUTINE ----------------------------- */
@@ -84,6 +82,6 @@ void		ft_msleep(long long msec);
 void		ft_exit(char *msg, t_data *data, int num, int exit_code);
 void		ft_print_action(t_philo *philo, t_state action);
 char		*ft_strjoin(char *s1, char *s2);
-char		*ft_itoa(int n);
+char		*small_itoa(int n);
 
-#endif //PHILO_H
+#endif //PHILO_BONUS_H
