@@ -6,31 +6,11 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 20:59:22 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/12 05:26:59 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/17 23:47:06 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static bool	ft_input_is_valid(int argc, char **argv);
-static bool	ft_init_sdata(int argc, char **argv, t_data *data);
-static bool	ft_init_sphilo(t_data *data);
-static bool	ft_threads(t_data *data);
-
-int	main(int argc, char **argv)
-{
-	t_data	data;
-
-	if (!ft_input_is_valid(argc, ++argv))
-		return (0);
-	if (!ft_init_sdata(argc, argv, &data))
-		return (1);
-	if (!ft_init_sphilo(&data))
-		return (2);
-	if (!ft_threads(&data))
-		return (3);
-	return (EXIT_SUCCESS);
-}
 
 static bool	ft_input_is_valid(int argc, char **argv)
 {
@@ -129,4 +109,19 @@ static bool	ft_threads(t_data *data)
 	if (ft_exit(NULL, data, data->num_philos, true) == false)
 		return (printf(ERROR "pthread_join failed\n"), false);
 	return (true);
+}
+
+int	main(int argc, char **argv)
+{
+	t_data	data;
+
+	if (!ft_input_is_valid(argc, ++argv))
+		return (0);
+	if (!ft_init_sdata(argc, argv, &data))
+		return (1);
+	if (!ft_init_sphilo(&data))
+		return (2);
+	if (!ft_threads(&data))
+		return (3);
+	return (EXIT_SUCCESS);
 }

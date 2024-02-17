@@ -6,7 +6,7 @@
 #    By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/28 16:25:24 by mevangel          #+#    #+#              #
-#    Updated: 2024/02/12 05:59:21 by mevangel         ###   ########.fr        #
+#    Updated: 2024/02/18 00:03:01 by mevangel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,9 +44,9 @@ clean:
 	@echo "$(CYAN)object files cleaned!$(CLEAR)"
 
 fclean:
-		@rm -rf $(OBJ_DIR)
-		@rm -f $(NAME)
-		@echo "$(CYAN)Philo executable and object files cleaned!$(CLEAR)"
+	@rm -rf $(OBJ_DIR)
+	@rm -f $(NAME)
+	@echo "$(CYAN)Philo executable and object files cleaned!$(CLEAR)"
 
 re: fclean all
 

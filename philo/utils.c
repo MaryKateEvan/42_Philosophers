@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 21:05:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/09 20:25:18 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/17 23:49:36 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ void	ft_print_action(t_philo *philo, t_state action)
 			printf("%lld %d %s\n", now, philo->id, "is thinking");
 		else
 			printf("%lld %d %s\n", now, philo->id, "died");
-		pthread_mutex_unlock(&philo->data->lock_print);
-		return ;
 	}
 	pthread_mutex_unlock(&philo->data->lock_print);
 }

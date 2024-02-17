@@ -6,18 +6,18 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/12 05:26:45 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/17 22:27:35 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-# include <unistd.h> //also for the usleep
+# include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
 # include <pthread.h>
-# include <sys/time.h> //for the gettimeofday
+# include <sys/time.h>
 # include <stdint.h>
 
 # define ERROR "\x1B[31mError: \x1B[0m"
