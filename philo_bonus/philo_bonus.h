@@ -6,23 +6,23 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/17 13:54:06 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/17 14:07:50 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/18 02:27:50 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_BONUS_H
 # define PHILO_BONUS_H
-# include <unistd.h> //also for the usleep
+# include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
 # include <pthread.h>
-# include <sys/time.h> //for the gettimeofday 
-# include <stdint.h> //? do i actually need that?
+# include <sys/time.h>
+# include <stdint.h>
 # include <semaphore.h>
-# include <fcntl.h> // for the O_CREATE macro
-# include <sys/types.h> //for the pid_t type
-# include <signal.h> //for the kill and its macros
+# include <fcntl.h>
+# include <sys/types.h>
+# include <signal.h>
 
 # define ERROR "\x1B[31mError: \x1B[0m"
 # define INPUT "\x1B[31mInvalid input: \x1B[0m"
@@ -44,7 +44,6 @@ typedef struct s_philo
 	int				id;
 	long long		t_of_death;
 	long			times_ate;
-	bool			is_done;
 	t_data			*data;
 	char			*time_name;
 	sem_t			*lock_time;
@@ -67,20 +66,20 @@ typedef struct s_data
 	sem_t		*sem_print;
 }	t_data;
 
-/* ----------------------------- ROUTINE ----------------------------- */
+/* ------------------------------- CORE ------------------------------- */
+void		check_input(int argc, char **argv);
+
+/* ----------------------------- ROUTINES ----------------------------- */
 void		*philo_routine(void *arg);
 void		*supervisor_routine(void *arg);
+void		*count_meals(void *arg);
 
-/* ----------------------------- CONTROL ----------------------------- */
-bool		reached_the_end(t_data *data);
-bool		no_philo_dead(t_philo *philo);
-
-/* ------------------------------ UTILS ------------------------------ */
-long long	ft_atoll(const char *str);
+/* ------------------------------ UTILS ------------------------------- */
 long long	current_mtime(void);
 void		ft_msleep(long long msec);
 void		ft_exit(char *msg, t_data *data, int num, int exit_code);
 void		ft_print_action(t_philo *philo, t_state action);
+long long	ft_atoll(const char *str);
 char		*ft_strjoin(char *s1, char *s2);
 char		*small_itoa(int n);
 

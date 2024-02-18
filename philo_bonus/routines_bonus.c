@@ -6,7 +6,7 @@
 /*   By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/29 02:12:32 by mevangel          #+#    #+#             */
-/*   Updated: 2024/02/17 12:50:56 by mevangel         ###   ########.fr       */
+/*   Updated: 2024/02/18 02:24:28 by mevangel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ static void	one_philo_routine(t_philo *philo)
 
 static void	ft_eat(t_philo *philo)
 {
-	if ((philo->id % 2 != 0))
-		usleep(300);
 	sem_wait(philo->data->forks);
 	ft_print_action(philo, takes_fork);
 	sem_wait(philo->data->forks);
@@ -83,5 +81,19 @@ void	*supervisor_routine(void *arg)
 			return (NULL);
 		}
 	}
+	return (NULL);
+}
+
+void	*count_meals(void *arg)
+{
+	t_data	*data;
+	int		i;
+
+	data = (t_data *)arg;
+	i = -1;
+	while (++i < data->num_philos)
+		sem_wait(data->philo[i].sem_is_done);
+	sem_wait(data->sem_print);
+	sem_post(data->sem_dead);
 	return (NULL);
 }

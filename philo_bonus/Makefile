@@ -6,7 +6,7 @@
 #    By: mevangel <mevangel@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/28 16:25:24 by mevangel          #+#    #+#              #
-#    Updated: 2024/02/15 04:40:09 by mevangel         ###   ########.fr        #
+#    Updated: 2024/02/18 02:28:56 by mevangel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,9 @@ SRC_DIR	=	./
 OBJ_DIR	=	./objs/
 
 SRC		=	$(SRC_DIR)main_bonus.c \
-			$(SRC_DIR)routine_bonus.c \
-			$(SRC_DIR)supervise_bonus.c \
+			$(SRC_DIR)routines_bonus.c \
 			$(SRC_DIR)utils_bonus.c \
-			$(SRC_DIR)ft_itoa.c \
-			$(SRC_DIR)ft_strjoin.c
+			$(SRC_DIR)helper_functions_bonus.c
 
 OBJ		=	$(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
@@ -46,9 +44,9 @@ clean:
 	@echo "$(CYAN)object files cleaned!$(CLEAR)"
 
 fclean:
-		@rm -rf $(OBJ_DIR)
-		@rm -f $(NAME)
-		@echo "$(CYAN)Philo_bonus executable and object files cleaned!$(CLEAR)"
+	@rm -rf $(OBJ_DIR)
+	@rm -f $(NAME)
+	@echo "$(CYAN)Philo_bonus executable and object files cleaned!$(CLEAR)"
 
 re: fclean all
 
